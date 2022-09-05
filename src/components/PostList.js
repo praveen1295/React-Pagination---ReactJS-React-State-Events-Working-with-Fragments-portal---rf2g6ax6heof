@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { fetchPosts } from "../api/fetchPosts";
-import { PaginationButtonsList } from "./PaginationButtonsList";
+import React, { useState, useEffect } from "react";
+import { Loader } from "./Loader";
 import { Post } from "./Post";
+import { PaginationButtonsList } from "./PaginationButtonsList";
 
 const PostList = () => {
-  const [data, setData] = useState(null);
+  const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
+  const [loader, setLoader] = useState(false);
 
   const loadData = async () => {
     fetchPosts(page, 5)
@@ -15,31 +16,27 @@ const PostList = () => {
       });
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const fetchDataApi = async () => {
+    let url = `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=5`;
+    setLoader(true);
+    let data = await fetch(url);
+    let myData = await data.json();
+    setPosts(myData);
+    setLoader(false);
+  };
 
   useEffect(() => {
-    setData(null);
-    loadData();
+    fetchDataApi();
   }, [page]);
 
-  const clickHandler = (val) => {
-    setPage(val);
+  const fetchMoreData = (pageNo) => {
+    setPage(pageNo);
   };
 
   return (
     <>
-      {data == null ? (
-        <div id="loader" className="loader">
-          loading
-        </div>
-      ) : (
-        data.map((ele) => {
-          return <Post ele={ele} key={ele.id} />;
-        })
-      )}
-      <PaginationButtonsList page={page} clickHandler={clickHandler} />
+      {loader ? <Loader /> : <Post posts={posts} />}
+      <PaginationButtonsList fetchMoreData={fetchMoreData} page={page} />
     </>
   );
 };
