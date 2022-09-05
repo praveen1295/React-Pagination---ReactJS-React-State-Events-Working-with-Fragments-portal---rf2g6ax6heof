@@ -6,11 +6,10 @@ import { PaginationButtonsList } from "./PaginationButtonsList";
 const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageItem, setPageItem] = useState(5);
   const [loader, setLoader] = useState(false);
 
   const fetchDataApi = async () => {
-    let url = `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=${pageItem}`;
+    let url = `https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=5`;
     setLoader(true);
     let data = await fetch(url);
     let myData = await data.json();
