@@ -1,9 +1,16 @@
-import React from "react";
-const Post = ({ ele }) => {
+import React, { useState, useEffect } from "react";
+
+const Post = (props) => {
   return (
     <div className="post">
-      <h3>{ele.title}</h3>
-      <p>{ele.body}</p>
+      {props.posts.map((element, index) => {
+        return (
+          <>
+            <h3 key={index}>{element.title}</h3>
+            <p>{element.body}</p>
+          </>
+        );
+      })}
     </div>
   );
 };
